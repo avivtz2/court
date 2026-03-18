@@ -183,7 +183,7 @@
         // --- DRAG & DROP & CLICK LOGIC ---
         function handleDragStart(e, rightName) {
             e.dataTransfer.setData("text/plain", rightName);
-            // הסרתי את הרינדור מחדש שכאן גרם לשבירת הגרירה
+            // לא לבצע כאן render! זה מה ששבר את הגרירה בעבר.
         }
 
         function handleDragOver(e) {
@@ -194,7 +194,7 @@
             e.preventDefault();
             const rightName = e.dataTransfer.getData("text/plain");
             if (rightName) {
-                state.activeClickRight = null; // איפוס בחירה אם הייתה בזמן גרירה
+                state.activeClickRight = null; 
                 placeRightOnScale(rightName, targetScale);
             }
         }
@@ -343,7 +343,6 @@
         function getWelcomeScreen() {
             return `
             <div class="p-6 sm:p-12 fade-in">
-                <!-- Visible Image for all screens (Explicitly added to solve the issue) -->
                 <img src="https://images.globes.co.il/images/NewGlobes/big_image_800/2020/800x392.2020204T170948.jpg" 
                      onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Supreme_court_of_israel_court_room_1.jpg/800px-Supreme_court_of_israel_court_room_1.jpg'"
                      alt="אולם בית המשפט העליון" 
@@ -395,7 +394,7 @@
             <div class="p-5 sm:p-10 bg-white fade-in">
                 <div class="flex items-center gap-2 mb-4">
                     <i data-lucide="file-text" class="w-6 h-6 text-blue-800"></i>
-                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">תיק מספר ${currentCase.id}: ${currentCase.title}</h2>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">תביעה: ${currentCase.title}</h2>
                 </div>
                 
                 <div class="bg-slate-50 p-5 sm:p-6 rounded-md mb-8 border-r-4 border-blue-800 shadow-sm">
@@ -474,14 +473,14 @@
                 const isSelected = state.selectedJudgment === option.id;
                 const activeClass = isSelected ? 'border-blue-800 bg-blue-50/50' : 'border-slate-200 hover:border-slate-300 bg-white';
                 optionsHtml += `
-                <label class="block p-4 sm:p-5 rounded-md border-2 cursor-pointer transition-all ${activeClass}" onclick="selectJudgment('${option.id}')">
+                <div class="block p-4 sm:p-5 rounded-md border-2 cursor-pointer transition-all ${activeClass}" onclick="selectJudgment('${option.id}')">
                     <div class="flex items-start gap-3">
-                        <div class="pt-0.5">
-                            <input type="radio" name="judgment" value="${option.id}" ${isSelected ? 'checked' : ''} class="w-4 h-4 sm:w-5 sm:h-5 text-blue-800 focus:ring-blue-800" onclick="event.stopPropagation()">
+                        <div class="pt-0.5 pointer-events-none">
+                            <input type="radio" name="judgment" value="${option.id}" ${isSelected ? 'checked' : ''} class="w-4 h-4 sm:w-5 sm:h-5 text-blue-800 focus:ring-blue-800">
                         </div>
-                        <span class="text-slate-800 leading-relaxed font-medium text-sm sm:text-base">${option.text}</span>
+                        <span class="text-slate-800 leading-relaxed font-medium text-sm sm:text-base pointer-events-none">${option.text}</span>
                     </div>
-                </label>
+                </div>
                 `;
             });
 
@@ -552,7 +551,7 @@
 
             return `
             <div class="p-5 sm:p-10 bg-white fade-in">
-                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-4">משוב וניתוח משפטי (תיק ${currentCase.id})</h2>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-4">משוב וניתוח משפטי: ${currentCase.title}</h2>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <div class="bg-slate-50 p-5 rounded-md border border-slate-200 shadow-sm relative overflow-hidden">
