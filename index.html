@@ -183,8 +183,7 @@
         // --- DRAG & DROP & CLICK LOGIC ---
         function handleDragStart(e, rightName) {
             e.dataTransfer.setData("text/plain", rightName);
-            state.activeClickRight = null;
-            render();
+            // הסרתי את הרינדור מחדש שכאן גרם לשבירת הגרירה
         }
 
         function handleDragOver(e) {
@@ -194,7 +193,10 @@
         function handleDrop(e, targetScale) {
             e.preventDefault();
             const rightName = e.dataTransfer.getData("text/plain");
-            placeRightOnScale(rightName, targetScale);
+            if (rightName) {
+                state.activeClickRight = null; // איפוס בחירה אם הייתה בזמן גרירה
+                placeRightOnScale(rightName, targetScale);
+            }
         }
 
         function handleRightClick(rightName) {
